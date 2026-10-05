@@ -1,0 +1,65 @@
+@import "tailwindcss";
+
+/* Dark-only shadcn theme, with greys from Tailwind's "mist" palette. */
+:root {
+  color-scheme: dark;
+  --radius: 0.625rem;
+  --background: var(--color-mist-950);
+  --foreground: var(--color-mist-50);
+  --card: var(--color-mist-900);
+  --card-foreground: var(--color-mist-50);
+  --popover: var(--color-mist-900);
+  --popover-foreground: var(--color-mist-50);
+  --primary: var(--color-mist-200);
+  --primary-foreground: var(--color-mist-900);
+  --secondary: var(--color-mist-800);
+  --secondary-foreground: var(--color-mist-50);
+  --muted: var(--color-mist-800);
+  --muted-foreground: var(--color-mist-400);
+  --accent: var(--color-mist-800);
+  --accent-foreground: var(--color-mist-50);
+  --destructive: var(--color-red-500);
+  --border: oklch(100% 0 0 / 10%);
+  --input: oklch(100% 0 0 / 15%);
+  --ring: var(--color-mist-500);
+
+  /* Life grid */
+  --dot-lived: var(--color-mist-600);
+  --dot-future: var(--color-mist-800);
+  --dot-today: var(--color-mist-50);
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+
+  body {
+    @apply bg-background text-foreground antialiased;
+  }
+}

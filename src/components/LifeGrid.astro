@@ -1,0 +1,117 @@
+---
+import {
+  CLIENT_DATA_ID,
+  type ClientLifeData,
+  TODAY_STYLE_ID,
+  todayCss,
+} from "@/lib/client-data";
+import type { LifeModel } from "@/lib/life";
+
+interface Props {
+  life: LifeModel;
+  /** Dot index of "today" at build time. The browser script replaces it with the viewer's local date. */
+  todayIndex: number;
+}
+
+const { life, todayIndex } = Astro.props;
+
+// One <i> per day. Event days get a class that sets their colour.
+const dots = Array.from({ length: life.totalDays }, (_, index) => {
+  const first = life.dayEvents.get(index)?.[0];
+  return first === undefined ? "<i></i>" : `<i class="e${first}"></i>`;
+}).join("");
+
+const eventCss = life.events
+  .map((event) => `.life-dots>.e${event.id}{--dot:${event.color}}`)
+  .join("\n");
+
+const clientData: ClientLifeData = {
+  birthDay: life.birthDay,
+  totalDays: life.totalDays,
+  events: life.events.map(({ name, color }) => ({ name, color })),
+  days: [...life.dayEvents.entries()],
+};
+---
+
+<style is:inline set:html={eventCss}></style>
+<style
+  is:inline
+  id={TODAY_STYLE_ID}
+  set:html={todayCss(todayIndex, life.totalDays)}
+></style>
+<script
+  is:inline
+  type="application/json"
+  id={CLIENT_DATA_ID}
+  set:html={JSON.stringify(clientData)}
+/>
+
+<div
+  id="life-grid"
+  class="life-dots"
+  tabindex="0"
+  role="application"
+  aria-roledescription="calendar of days"
+  aria-label="One dot per day of life. Use the arrow keys to move between days."
+  aria-describedby="life-announcer"
+  set:html={dots}
+/>
+<p id="life-announcer" class="sr-only" aria-live="polite"></p>
+
+<div
+  id="life-tooltip"
+  role="tooltip"
+  hidden
+  class="pointer-events-none fixed z-50 w-max max-w-64 rounded-md bg-foreground px-3 py-1.5 text-xs text-background shadow-md"
+>
+</div>
+
+<style>
+  /*
+   * Each day is a square cell. Cells are at least --cell-min wide and stretch
+   * to fill the row, so the number of columns follows the available width.
+   * The visible dot is the cell minus --dot-inset on each side; the whole cell
+   * (including the visual gap) is the hover and tap target.
+   */
+  .life-dots {
+    --cell-min: 16px;
+    --dot-inset: 18%;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(var(--cell-min), 1fr));
+    border-radius: var(--radius-sm);
+    touch-action: manipulation;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  /* Touch screens: bigger cells for fingers. */
+  @media (pointer: coarse) {
+    .life-dots {
+      --cell-min: 11px;
+      --dot-inset: 15%;
+    }
+  }
+
+  .life-dots:focus-visible {
+    outline: 2px solid var(--ring);
+    outline-offset: 6px;
+  }
+
+  .life-dots > :global(i) {
+    aspect-ratio: 1;
+    /* Grid items resolve percentage padding against the cell width. */
+    padding: var(--dot-inset);
+    border-radius: 9999px;
+    background: var(--dot, var(--dot-lived));
+    background-clip: content-box;
+  }
+
+  .life-dots > :global(i[data-active]) {
+    box-shadow: 0 0 0 2px var(--foreground);
+  }
+</style>
+
+<script>
+  import { initLifeGrid } from "@/scripts/life-grid";
+
+  initLifeGrid();
+</script>

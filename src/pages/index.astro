@@ -1,0 +1,25 @@
+---
+import LifeGrid from "@/components/LifeGrid.astro";
+import LifeSummary from "@/components/LifeSummary";
+import Layout from "@/layouts/Layout.astro";
+import { lifeStats } from "@/lib/client-data";
+import { localTodayDayNumber } from "@/lib/dates";
+import { loadLife } from "@/lib/load-life";
+
+const life = loadLife();
+const todayIndex = localTodayDayNumber() - life.birthDay;
+---
+
+<Layout title="Life in days" description="One dot for each day of a life.">
+  <div class="px-4 py-10">
+    <main class="mx-auto flex w-full max-w-[800px] flex-col gap-8">
+      <LifeSummary
+        stats={lifeStats(todayIndex, life.totalDays)}
+        totalDays={life.totalDays}
+        expectancyYears={life.expectancyYears}
+        events={life.events.map(({ id, name, color }) => ({ id, name, color }))}
+      />
+      <LifeGrid life={life} todayIndex={todayIndex} />
+    </main>
+  </div>
+</Layout>

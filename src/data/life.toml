@@ -1,0 +1,38 @@
+# One dot per day of a life. The build fails with a clear message if this file is invalid.
+
+[life]
+# Date of birth, YYYY-MM-DD.
+birthday = "1975-07-05"
+# Life expectancy in years. Fractions are allowed; leap years are taken into account.
+expectancy_years = 80.5
+
+# Events
+# ------
+# date       YYYY-MM-DD. For recurring events this is the first occurrence (the anchor).
+# event      Name shown in the tooltip.
+# type       "birthday" or "event" (default). Birthdays without a colour are red.
+# color      Optional. Hex ("#c2410c"), rgb() ("rgb(194 65 12)"), or a Tailwind colour ("orange-700").
+# recurring  true or false (default).
+# period     For recurring events: "yearly", "monthly", "weekly", or "daily". "frequency" is an alias.
+# until      Optional last date (inclusive) for recurring events.
+#
+# Yearly events on 29 February fall on 28 February in non-leap years.
+# Monthly events on the 29th to 31st fall on the last day of shorter months.
+# If several events fall on one day, one-off events colour the dot first, then
+# yearly, monthly, weekly, and daily events. All names show in the tooltip.
+
+[[events]]
+date = "1975-07-05"
+event = "Birthday"
+type = "birthday"
+color = "orange-700"
+recurring = true
+period = "yearly"
+
+# Example of a calculated recurring event:
+# [[events]]
+# date = "1976-01-01"
+# event = "New Year"
+# color = "#a3e635"
+# recurring = true
+# period = "yearly"

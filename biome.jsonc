@@ -1,0 +1,24 @@
+{
+  "$schema": "./node_modules/@biomejs/biome/configuration_schema.json",
+  "extends": ["./node_modules/@dnbhq/biome-config/config.json"],
+  "css": {
+    "parser": {
+      // Tailwind CSS v4 directives (@theme, @apply, @import "tailwindcss") in src/styles/global.css.
+      "tailwindDirectives": true
+    }
+  },
+  "overrides": [
+    {
+      // Biome only parses Astro frontmatter, so imports and variables used in the template look unused.
+      "includes": ["**/*.astro"],
+      "linter": {
+        "rules": {
+          "correctness": {
+            "noUnusedImports": "off",
+            "noUnusedVariables": "off"
+          }
+        }
+      }
+    }
+  ]
+}
